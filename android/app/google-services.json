@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "881483247458",
+    "project_id": "mynotes-celikerde",
+    "storage_bucket": "mynotes-celikerde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881483247458:android:2e73bcd680e2bd5167863b",
+        "android_client_info": {
+          "package_name": "com.celikerde.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5WLkfrn_I9WDwvJsE2Vr_KQq3mxMoLyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
