@@ -12,13 +12,14 @@ void main() {
   runApp(MaterialApp(
     title: 'Flutter Demo',
     theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      useMaterial3: true,
-    ),
+        colorScheme: const ColorScheme.light(),
+        useMaterial3: true,
+        appBarTheme: AppBarTheme(color: Colors.greenAccent)),
     home: const HomePage(),
     routes: {
       '/login/': (context) => const LoginView(),
-      '/register/': (context) => const RegisterView()
+      '/register/': (context) => const RegisterView(),
+      '/notes/': (context) => const NotesView()
     },
   ));
 }
@@ -74,6 +75,7 @@ class _NotesViewState extends State<NotesView> {
                   case MenuAction.logout:
                     final logOut = await showLogOutDialog(context);
                     if (logOut) {
+                      devtools.log(logOut.toString());
                       await FirebaseAuth.instance.signOut();
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil('/login/', (_) => false);
@@ -98,18 +100,18 @@ Future<bool> showLogOutDialog(BuildContext context) {
       context: context,
       builder: (context) => AlertDialog(
             title: const Text('Sign out'),
-            content: const Text('Are you sure want to log out?'),
+            content: const Text('Are you sure want to sign out?'),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: Text('Log out'))
+                  child: const Text('Log out'))
             ],
           )).then((value) => value ?? false);
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -29,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login View')),
+      appBar: AppBar(title: const Text('Login')),
       body: Column(
         children: [
           TextField(
@@ -47,20 +48,25 @@ class _LoginViewState extends State<LoginView> {
             decoration: const InputDecoration(hintText: "Enter the password"),
           ),
           TextButton(
-            child: const Text('Login'),
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              try {
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-                print(userCredential);
-              } on FirebaseAuthException catch (e) {
-                print(e.code);
-              }
-            },
-          ),
+              child: const Text('Login'),
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/notes/', (route) => false);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    devtools.log('User not found');
+                  } else if (e.code == 'wrong-password') {
+                    devtools.log('Wrong Password');
+                  }
+                }
+              }),
           TextButton(
               onPressed: () {
                 Navigator.of(context)
