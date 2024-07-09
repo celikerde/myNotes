@@ -15,7 +15,7 @@ void main() {
     theme: ThemeData(
         colorScheme: const ColorScheme.light(),
         useMaterial3: true,
-        appBarTheme: AppBarTheme(color: Colors.greenAccent)),
+        appBarTheme: const AppBarTheme(color: Colors.greenAccent)),
     home: const HomePage(),
     routes: {
       loginRoute: (context) => const LoginView(),
