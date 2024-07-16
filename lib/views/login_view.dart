@@ -73,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                   _password.clear();
                   await showErrorDialog(
                     context,
-                    'Wrong email address or password.',
+                    'Email adress or password is incorrect',
                   );
                 } on GenericAuthException {
                   await showErrorDialog(
