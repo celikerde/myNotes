@@ -11,13 +11,18 @@ class NotesService {
   List<DatabaseNote> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
 
-  final _notesStremController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
-  Stream<List<DatabaseNote>> get allNotes => _notesStremController.stream;
+  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
   Future<DatabaseUser> getOrCreateUser({required String email}) async {
     try {
@@ -34,7 +39,7 @@ class NotesService {
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
     _notes = allNotes.toList();
-    _notesStremController.add(_notes);
+    _notesStreamController.add(_notes);
   }
 
   Future<DatabaseNote> updateNote(
@@ -52,7 +57,7 @@ class NotesService {
       final updatedNote = await getNote(id: note.id);
       _notes.removeWhere((note) => note.id == updatedNote.id);
       _notes.add(updatedNote);
-      _notesStremController.add(_notes);
+      _notesStreamController.add(_notes);
       return updatedNote;
     }
   }
@@ -80,7 +85,7 @@ class NotesService {
     } else {
       final note = DatabaseNote.fromRow(notes.first);
       _notes.removeWhere((note) => note.id == id);
-      _notesStremController.add(_notes);
+      _notesStreamController.add(_notes);
       return note;
     }
   }
@@ -90,7 +95,7 @@ class NotesService {
     final db = _getDatabaseorThrow();
     final numberOfDeletions = await db.delete(noteTable);
     _notes = [];
-    _notesStremController.add(_notes);
+    _notesStreamController.add(_notes);
     return numberOfDeletions;
   }
 
@@ -106,7 +111,7 @@ class NotesService {
       throw CouldNotDeleteNote();
     } else {
       _notes.removeWhere((note) => note.id == id);
-      _notesStremController.add(_notes);
+      _notesStreamController.add(_notes);
     }
   }
 
@@ -132,7 +137,7 @@ class NotesService {
       isSyncedWithCloud: true,
     );
     _notes.add(note);
-    _notesStremController.add(_notes);
+    _notesStreamController.add(_notes);
     return note;
   }
 
